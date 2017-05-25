@@ -1,4 +1,4 @@
-%define beta beta4
+%define beta rc
 
 Name:	qt5-qtvirtualkeyboard
 Version: 5.9.0
