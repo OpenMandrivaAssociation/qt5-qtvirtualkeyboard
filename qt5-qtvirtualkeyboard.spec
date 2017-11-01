@@ -1,4 +1,4 @@
-%define beta beta2
+%define beta beta3
 
 Name:	qt5-qtvirtualkeyboard
 Version: 5.10.0
