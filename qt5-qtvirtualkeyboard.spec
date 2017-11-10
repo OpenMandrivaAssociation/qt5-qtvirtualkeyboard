@@ -1,12 +1,14 @@
-%define beta beta3
+%define beta beta4
 
 Name:	qt5-qtvirtualkeyboard
 Version: 5.10.0
 %if "%{beta}" != "%{nil}"
-Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/qtvirtualkeyboard-everywhere-src-%{version}.tar.xz
+%define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
+Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 Release: 0.%{beta}.1
 %else
-Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/qtvirtualkeyboard-opensource-src-%{version}.tar.xz
+%define qttarballdir qtvirtualkeyboard-opensource-src-%{version}
+Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 Release: 1
 %endif
 Summary: Qt Virtual Keyboard
@@ -32,11 +34,7 @@ Examples for the Qt Virtual Keyboard
 %{_libdir}/qt5/examples/virtualkeyboard
 
 %prep
-%if "%{beta}" != "%{nil}"
-%setup -qn qtvirtualkeyboard-everywhere-src-%{version}
-%else
-%setup -qn qtvirtualkeyboard-opensource-src-%{version}
-%endif
+%setup -qn %{qttarballdir}
 %qmake_qt5 *.pro
 
 %build
