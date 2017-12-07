@@ -1,4 +1,4 @@
-%define beta rc3
+%define beta %{nil}
 
 Name:	qt5-qtvirtualkeyboard
 Version: 5.10.0
@@ -7,7 +7,7 @@ Version: 5.10.0
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
 Release: 0.%{beta}.1
 %else
-%define qttarballdir qtvirtualkeyboard-opensource-src-%{version}
+%define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
 Release: 1
 %endif
