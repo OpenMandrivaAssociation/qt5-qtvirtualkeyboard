@@ -19,6 +19,8 @@ BuildRequires: qmake5
 BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Svg)
+# For the Provides: generator
+BuildRequires:	cmake >= 3.11.0-1
 
 %description
 Qt text to virtualkeyboard library
