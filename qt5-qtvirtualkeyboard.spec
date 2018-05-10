@@ -1,4 +1,4 @@
-%define beta beta4
+%define beta rc
 
 Name:	qt5-qtvirtualkeyboard
 Version: 5.11.0
@@ -49,3 +49,4 @@ make install install_docs INSTALL_ROOT="%{buildroot}"
 %{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
 %{_libdir}/qt5/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so
 %{_libdir}/qt5/qml/QtQuick/VirtualKeyboard
+%{_datadir}/qt5/qtvirtualkeyboard
