@@ -1,6 +1,6 @@
 %define beta %{nil}
 
-Name:	qt5-qtvirtualkeyboard
+Name: qt5-qtvirtualkeyboard
 Version: 5.11.2
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
@@ -20,30 +20,30 @@ BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Svg)
 # For the Provides: generator
-BuildRequires:	cmake >= 3.11.0-1
+BuildRequires: cmake >= 3.11.0-1
 
 %description
-Qt text to virtualkeyboard library
+Qt text to virtualkeyboard library.
 
 %package examples
 Summary: Examples for the Qt Virtual Keyboard
 Group: Development/KDE and Qt
 
 %description examples
-Examples for the Qt Virtual Keyboard
+Examples for the Qt Virtual Keyboard.
 
 %files examples
 %{_libdir}/qt5/examples/virtualkeyboard
 
 %prep
-%setup -qn %{qttarballdir}
+%autosetup -n %{qttarballdir} -p1
 %qmake_qt5 *.pro
 
 %build
-%make
+%make_build
 
 %install
-make install install_docs INSTALL_ROOT="%{buildroot}"
+%make_install install_docs INSTALL_ROOT="%{buildroot}"
 
 %files
 %{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
