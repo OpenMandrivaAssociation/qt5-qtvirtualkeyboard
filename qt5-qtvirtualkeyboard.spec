@@ -4,10 +4,10 @@
 %define hunspelllib %mklibname Qt5HunspellInputMethod %{major}
 %define hunspelldevel %mklibname -d Qt5HunspellInputMethod
 
-%define beta %{nil}
+%define beta rc3
 
 Name: qt5-qtvirtualkeyboard
-Version: 5.12.3
+Version: 5.13.0
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
@@ -15,7 +15,7 @@ Release: 0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
-Release: 2
+Release: 1
 %endif
 Summary: Qt Virtual Keyboard
 URL: https://github.com/qtproject/qtvirtualkeyboard
