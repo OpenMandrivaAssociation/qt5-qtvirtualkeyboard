@@ -7,15 +7,15 @@
 %define beta %{nil}
 
 Name: qt5-qtvirtualkeyboard
-Version: 5.13.0
+Version:	5.13.1
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
-Release: 0.%{beta}.1
+Release:	1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
-Release: 2
+Release:	1
 %endif
 Summary: Qt Virtual Keyboard
 URL: https://github.com/qtproject/qtvirtualkeyboard
@@ -100,6 +100,8 @@ Examples for the Qt Virtual Keyboard.
 %{_libdir}/qt5/mkspecs/modules/qt_lib_virtualkeyboard*.pri
 %{_libdir}/cmake/Qt5VirtualKeyboard
 %{_includedir}/qt5/QtVirtualKeyboard
+%{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfig.cmake
+%{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfigVersion.cmake
 
 %files -n %{hunspelllib}
 %{_libdir}/libQt5HunspellInputMethod.so.%{major}*
