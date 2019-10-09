@@ -4,14 +4,14 @@
 %define hunspelllib %mklibname Qt5HunspellInputMethod %{major}
 %define hunspelldevel %mklibname -d Qt5HunspellInputMethod
 
-%define beta %{nil}
+%define beta beta1
 
 Name: qt5-qtvirtualkeyboard
-Version:	5.13.1
+Version:	5.14.0
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
-Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%(echo %{beta} |sed -e "s,1$,,")/submodules/%{qttarballdir}.tar.xz
-Release:	1
+Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
+Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
@@ -26,6 +26,8 @@ BuildRequires: pkgconfig(Qt5Core)
 BuildRequires: pkgconfig(Qt5Quick)
 BuildRequires: pkgconfig(Qt5Svg)
 BuildRequires: pkgconfig(hunspell)
+BuildRequires: qt5-qtdoc
+BuildRequires: qt5-qttools
 # For the Provides: generator
 BuildRequires: cmake >= 3.11.0-1
 
@@ -78,6 +80,7 @@ Examples for the Qt Virtual Keyboard.
 
 %build
 %make_build
+%make_build docs
 
 %install
 %make_install install_docs INSTALL_ROOT="%{buildroot}"
@@ -102,6 +105,8 @@ Examples for the Qt Virtual Keyboard.
 %{_includedir}/qt5/QtVirtualKeyboard
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfig.cmake
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfigVersion.cmake
+%doc %{_docdir}/qt5/qtvirtualkeyboard.qch
+%doc %{_docdir}/qt5/qtvirtualkeyboard
 
 %files -n %{hunspelllib}
 %{_libdir}/libQt5HunspellInputMethod.so.%{major}*
