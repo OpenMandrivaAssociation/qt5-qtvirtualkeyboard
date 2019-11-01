@@ -4,7 +4,7 @@
 %define hunspelllib %mklibname Qt5HunspellInputMethod %{major}
 %define hunspelldevel %mklibname -d Qt5HunspellInputMethod
 
-%define beta beta1
+%define beta beta2
 
 Name: qt5-qtvirtualkeyboard
 Version:	5.14.0
