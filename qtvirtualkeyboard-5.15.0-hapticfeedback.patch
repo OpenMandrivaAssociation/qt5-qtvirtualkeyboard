@@ -1,0 +1,257 @@
+diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h.omv~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h
+--- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h.omv~	2020-09-04 01:22:37.645423877 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h	2020-09-04 01:23:02.785550259 +0200
+@@ -0,0 +1,33 @@
++/* BitField class that, unlike std::bitset, works with
++ * C style input (memset/memcpy/...), and therefore with
++ * ioctl output without conversions
++ *
++ * (C) 2020 Bernhard Rosenkränzer <bero@lindev.ch>
++ *
++ * Released under the GPLv3
++ */
++
++#pragma once
++
++#include <cstdint>
++#include <cstring>
++
++template<size_t s> class BitField {
++public:
++	BitField() { memset(data, 0, sizeof(data)); }
++	operator void*() { return static_cast<void*>(&data); }
++	bool isSet(int bit) const {
++		return (data[(bit/8)]>>(bit%8))&1;
++	}
++	void set(int bit) {
++		data[(bit/8)] |= 1<<(bit%8);
++	}
++	void clear(int bit) {
++		data[(bit/8)] &= ~(1<<(bit%8));
++	}
++	bool operator[](int bit) const {
++		return isSet(bit);
++	}
++private:
++	uint8_t data[1+s/8];
++};
+diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp.omv~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp
+--- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp.omv~	2020-09-04 01:15:24.854196058 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp	2020-09-04 01:15:10.390707187 +0200
+@@ -0,0 +1,123 @@
++/* Class to drive the PinePhone (and similar) vibrator
++ *
++ * (C) 2020 Bernhard Rosenkränzer <bero@lindev.ch>
++ *
++ * Released under the GPLv3
++ */
++
++#include "hapticfeedback.h"
++#include "bitfield.h"
++
++#include <QDir>
++#include <QFile>
++#include <iostream>
++
++extern "C" {
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <unistd.h>
++}
++
++HapticFeedback::HapticFeedback(QString const &device) {
++	int fd;
++	_dbg=fopen("/tmp/haptic.log", "a+");
++	if(device.isEmpty()) {
++		// Locate the vibrator -- it'll typically be the first
++		// device that supports the force feedback API and doesn't
++		// look like a joystick/gamepad.
++		QDir devinput(QString::fromLatin1("/dev/input"));
++		for(QString const &dev : devinput.entryList(QStringList() << QString::fromLatin1("event*"), QDir::Readable|QDir::Writable|QDir::System|QDir::NoDotAndDotDot)) {
++			QString d(QString::fromLatin1("/dev/input/") + dev);
++			fd = open(QFile::encodeName(d).data(), O_RDWR);
++			if(fd < 0) {
++				// If we can't open it, can't be the device
++				continue;
++			}
++
++			fprintf(_dbg, "Probing %s\n", qPrintable(d)); fflush(_dbg);
++			int effects;
++			if(ioctl(fd, EVIOCGEFFECTS, &effects) < 0) {
++				perror("EVIOCGEFFECTS");
++				close(fd);
++				continue;
++			}
++			if(effects <= 0)
++				continue;
++
++			BitField<FF_MAX> ffFeatures;
++			if(ioctl(fd, EVIOCGBIT(EV_FF, sizeof(ffFeatures)), &ffFeatures) < 0) {
++				perror("EV_FF");
++				close(fd);
++				continue;
++			}
++			if(ffFeatures.isSet(FF_AUTOCENTER)) {
++				fprintf(_dbg, "Has autocenter\n"); fflush(_dbg);
++				// Looks like a joystick -- a vibrator
++				// doesn't really have a center...
++				close(fd);
++				continue;
++			}
++			if(!ffFeatures.isSet(FF_RUMBLE)) {
++				fprintf(_dbg, "Doesn't have rumble\n"); fflush(_dbg);
++				// Doesn't support the mode we use (for now)
++				// let's see if there's another device that does...
++				close(fd);
++				continue;
++			}
++			if(ffFeatures.isSet(FF_GAIN)) {
++				// set gain to 75%
++				input_event gain;
++				memset(&gain, 0, sizeof(gain));
++				gain.type = EV_FF;
++				gain.code = FF_GAIN;
++				gain.value = 0xc000;
++				if(write(fd, &gain, sizeof(gain)) != sizeof(gain))
++					perror("Set gain"); // Probably not fatal...
++			}
++			_device = d;
++			break;
++		}
++	} else {
++		fd = open(QFile::encodeName(device).data(), O_RDWR);
++		if(fd < 0)
++			return;
++		close(fd);
++		_device = device;
++	}
++	fprintf(_dbg, "Using %s\n", qPrintable(_device)); fflush(_dbg);
++	sendCmd(true);
++}
++
++bool HapticFeedback::sendCmd(bool start) {
++	fprintf(_dbg, "Sending %u to %s\n", start, qPrintable(_device)); fflush(_dbg);
++	int fd = open(QFile::encodeName(_device).data(), O_RDWR);
++	if(fd < 0)
++		return false;
++
++	ff_effect effect[1];
++	memset(&effect, 0, sizeof(effect));
++	effect[0].type = FF_RUMBLE;
++	effect[0].id = -1;
++	effect[0].u.rumble.strong_magnitude = 0xffff;
++	effect[0].u.rumble.weak_magnitude = 0x0;
++	effect[0].replay.length = 250;
++	effect[0].replay.delay = 0;
++	ioctl(fd, EVIOCSFF, &effect[0]);
++
++	input_event cmd;
++	memset(&cmd, 0, sizeof(input_event));
++	cmd.type = EV_FF;
++	cmd.code = effect[0].id;
++	cmd.value = start ? 1 : 0;
++	bool ok = write(fd, &cmd, sizeof(cmd)) == sizeof(cmd);
++	close(fd);
++	return ok;
++}
++
++void HapticFeedback::start() {
++	sendCmd(true);
++}
++
++void HapticFeedback::stop() {
++	sendCmd(false);
++}
+diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h.omv~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h
+--- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h.omv~	2020-09-04 01:15:22.814174113 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h	2020-09-04 01:19:36.576918402 +0200
+@@ -0,0 +1,27 @@
++/**
++ * Haptic feedback for devices supporting the
++ * evdev force feedback feature
++ * (C) 2020 Bernhard Rosenkränzer <bero@lindev.ch>
++ * Released under the GPLv3
++ */
++#pragma once
++
++#include <QString>
++
++extern "C" {
++#include <linux/input.h>
++}
++
++class HapticFeedback {
++public:
++	HapticFeedback(QString const &device=QString());
++	bool isOk() const { return !_device.isEmpty(); }
++public:
++	void start();
++	void stop();
++private:
++	bool sendCmd(bool start);
++private:
++	QString	_device;
++	FILE *_dbg;
++};
+diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.omv~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp
+--- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.omv~	2020-09-04 01:16:55.435172557 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp	2020-09-04 01:21:07.784577169 +0200
+@@ -38,6 +38,8 @@
+ #include <QTimerEvent>
+ #include <QtCore/private/qobject_p.h>
+ 
++#include "hapticfeedback.h"
++
+ QT_BEGIN_NAMESPACE
+ using namespace QtVirtualKeyboard;
+ 
+@@ -58,7 +60,8 @@ public:
+         previousKey(Qt::Key_unknown),
+         repeatTimer(0),
+         repeatCount(0),
+-        recursiveMethodLock(0)
++        recursiveMethodLock(0),
++	hf()
+     {
+     }
+ 
+@@ -75,9 +78,11 @@ public:
+             if (!accept) {
+                 accept = fallbackInputMethod->keyEvent(key, text, modifiers);
+             }
++	    if(hf.isOk()) hf.start();
+             emit q->virtualKeyClicked(key, text, modifiers, isAutoRepeat);
+         } else if (QT_VIRTUALKEYBOARD_FORCE_EVENTS_WITHOUT_FOCUS) {
+             accept = fallbackInputMethod->keyEvent(key, text, modifiers);
++	    if(hf.isOk()) hf.start();
+             emit q->virtualKeyClicked(key, text, modifiers, isAutoRepeat);
+         } else {
+             qWarning() << "input method is not set";
+@@ -100,6 +105,7 @@ public:
+     int repeatTimer;
+     int repeatCount;
+     int recursiveMethodLock;
++    HapticFeedback hf;
+ };
+ 
+ class RecursiveMethodGuard
+diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro.omv~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro
+--- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro.omv~	2020-09-04 01:16:06.644646078 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro	2020-09-04 01:23:13.418938988 +0200
+@@ -13,6 +13,7 @@ DEFINES += QVIRTUALKEYBOARD_LIBRARY
+ include(../config.pri)
+ 
+ SOURCES += \
++    hapticfeedback.cpp \
+     platforminputcontext.cpp \
+     qvirtualkeyboardinputcontext.cpp \
+     qvirtualkeyboardinputcontext_p.cpp \
+@@ -38,6 +39,8 @@ SOURCES += \
+     qvirtualkeyboardextensionplugin.cpp
+ 
+ HEADERS += \
++    bitfield.h \
++    hapticfeedback.h \
+     platforminputcontext_p.h \
+     qvirtualkeyboardinputcontext.h \
+     qvirtualkeyboardinputcontext_p.h \
