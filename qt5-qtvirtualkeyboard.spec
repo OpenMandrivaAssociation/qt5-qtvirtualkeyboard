@@ -7,7 +7,7 @@
 %define beta %{nil}
 
 Name: qt5-qtvirtualkeyboard
-Version:	5.15.0
+Version:	5.15.1
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
-Release:	2
+Release:	1
 %endif
 Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 Summary: Qt Virtual Keyboard

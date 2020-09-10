@@ -1,6 +1,6 @@
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h.1~	2020-09-04 19:22:26.608796161 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h	2020-09-04 19:22:26.608796161 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/bitfield.h.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/bitfield.h
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/bitfield.h.1~	2020-09-10 01:29:56.499059017 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/bitfield.h	2020-09-10 01:29:56.499059017 +0200
 @@ -0,0 +1,33 @@
 +/* BitField class that, unlike std::bitset, works with
 + * C style input (memset/memcpy/...), and therefore with
@@ -35,9 +35,9 @@ diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/bitfield.h.
 +private:
 +	uint8_t data[1+s/8];
 +};
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp.1~	2020-09-04 19:22:26.608796161 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.cpp	2020-09-04 19:22:26.608796161 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.cpp.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.cpp
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.cpp.1~	2020-09-10 01:29:56.500059031 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.cpp	2020-09-10 01:29:56.500059031 +0200
 @@ -0,0 +1,126 @@
 +/* Class to drive the PinePhone (and similar) vibrator
 + *
@@ -165,9 +165,9 @@ diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedb
 +void HapticFeedback::stop() {
 +	sendCmd(false);
 +}
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h.1~	2020-09-04 19:22:26.608796161 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedback.h	2020-09-04 19:22:26.608796161 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.h.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.h
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.h.1~	2020-09-10 01:29:56.500059031 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/hapticfeedback.h	2020-09-10 01:29:56.500059031 +0200
 @@ -0,0 +1,30 @@
 +/**
 + * Haptic feedback for devices supporting the
@@ -199,9 +199,9 @@ diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/hapticfeedb
 +	ff_effect _effect[1];
 +	FILE *_dbg;
 +};
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.1~	2020-04-22 08:15:18.000000000 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp	2020-09-04 19:25:26.188444823 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp.1~	2020-08-24 11:20:53.000000000 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.cpp	2020-09-10 01:29:56.500059031 +0200
 @@ -38,6 +38,8 @@
  #include <QTimerEvent>
  #include <QtCore/private/qobject_p.h>
@@ -227,9 +227,9 @@ diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkey
          d->virtualKeyClick(d->activeKey, d->activeKeyText, d->activeKeyModifiers, true);
          d->repeatTimer = startTimer(50);
          d->repeatCount++;
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.h.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.h
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.h.1~	2020-09-04 19:31:50.828904022 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkeyboardinputengine.h	2020-09-04 19:25:56.581742110 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.h.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.h
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.h.1~	2020-08-24 11:20:53.000000000 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/qvirtualkeyboardinputengine.h	2020-09-10 01:31:19.092189040 +0200
 @@ -33,6 +33,7 @@
  #include <QObject>
  #include <QPointer>
@@ -239,16 +239,16 @@ diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/qvirtualkey
  QT_BEGIN_NAMESPACE
  
 @@ -160,6 +161,7 @@ protected:
-     void timerEvent(QTimerEvent *timerEvent);
+     void timerEvent(QTimerEvent *timerEvent) override;
  
  private:
 +    HapticFeedback hf;
      friend class QVirtualKeyboardInputContext;
      friend class QVirtualKeyboardInputContextPrivate;
  };
-diff -up qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro.1~ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro
---- qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro.1~	2020-04-22 08:15:18.000000000 +0000
-+++ qtvirtualkeyboard-everywhere-src-5.15.0/src/virtualkeyboard/virtualkeyboard.pro	2020-09-04 19:22:26.612796331 +0000
+diff -up qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/virtualkeyboard.pro.1~ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/virtualkeyboard.pro
+--- qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/virtualkeyboard.pro.1~	2020-08-24 11:20:53.000000000 +0200
++++ qtvirtualkeyboard-everywhere-src-5.15.1/src/virtualkeyboard/virtualkeyboard.pro	2020-09-10 01:29:56.500059031 +0200
 @@ -13,6 +13,7 @@ DEFINES += QVIRTUALKEYBOARD_LIBRARY
  include(../config.pri)
  
