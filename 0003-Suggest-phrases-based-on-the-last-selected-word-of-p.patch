@@ -1,0 +1,48 @@
+From 2f0e9f98c6c6fdac09f762d41fddcc114f64b28a Mon Sep 17 00:00:00 2001
+From: Niu Shouwei <niushouwei@126.com>
+Date: Sat, 5 Dec 2020 10:22:20 +0800
+Subject: [PATCH 3/3] Suggest phrases based on the last selected word of pinyin
+
+The prediction was based on the previous character instead of
+the last one.
+
+Fixes: QTBUG-89018
+Change-Id: Ib48040fc922bf0e3e02a7912be2b0d8919a81658
+Reviewed-by: Jarkko Koivikko <jarkko.koivikko@code-q.fi>
+Reviewed-by: Mitch Curtis <mitch.curtis@qt.io>
+(cherry picked from commit bcd9320cc2c231bca7c671927f473ce82e6d071b)
+---
+ src/plugins/pinyin/plugin/pinyininputmethod.cpp | 2 +-
+ tests/auto/inputpanel/data/tst_inputpanel.qml   | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/plugins/pinyin/plugin/pinyininputmethod.cpp b/src/plugins/pinyin/plugin/pinyininputmethod.cpp
+index cdd7d21..f28f5fa 100644
+--- a/src/plugins/pinyin/plugin/pinyininputmethod.cpp
++++ b/src/plugins/pinyin/plugin/pinyininputmethod.cpp
+@@ -134,8 +134,8 @@ public:
+         if (composingStr.length() > 0) {
+             if ((candId >= 0 || finishSelection) && composingStr.length() == fixedLen) {
+                 QString resultStr = getComposingStrActivePart();
+-                tryPredict();
+                 q->inputContext()->commit(resultStr);
++                tryPredict();
+             } else if (state == Idle) {
+                 state = Input;
+             }
+diff --git a/tests/auto/inputpanel/data/tst_inputpanel.qml b/tests/auto/inputpanel/data/tst_inputpanel.qml
+index ec1dbd9..d814f28 100644
+--- a/tests/auto/inputpanel/data/tst_inputpanel.qml
++++ b/tests/auto/inputpanel/data/tst_inputpanel.qml
+@@ -915,6 +915,8 @@ Rectangle {
+                 { initInputMethodHints: Qt.ImhNone, initLocale: "zh_CN", inputSequence: "bailou", expectedCandidates: [ "\u5457", "\u5A04" ], outputText: "\u5457\u5A04" },
+                 // Select phrase from the user dictinary
+                 { initInputMethodHints: Qt.ImhNone, initLocale: "zh_CN", inputSequence: "bailou", expectedCandidates: [ "\u5457\u5A04" ], outputText: "\u5457\u5A04" },
++                // Suggest phrases according to the last selected word
++                { initInputMethodHints: Qt.ImhNone, initLocale: "zh_CN", inputSequence: "da", expectedCandidates: [ "\u5927", "\u5bb6", "\u5ead" ], outputText: "\u5927\u5bb6\u5ead" },
+                 // Add an apostrophe before joined syllables in cases of ambiguity, disable the user dictionary (Qt.ImhSensitiveData) so it does not affect to the results
+                 { initInputMethodHints: Qt.ImhNone | Qt.ImhSensitiveData, initLocale: "zh_CN", inputSequence: "zhangang", expectedCandidates: [ "\u5360", "\u94A2" ], outputText: "\u5360\u94A2" },
+                 { initInputMethodHints: Qt.ImhNone | Qt.ImhSensitiveData, initLocale: "zh_CN", inputSequence: "zhang'ang", expectedCandidates: [ "\u7AE0", "\u6602" ], outputText: "\u7AE0\u6602" },
+-- 
+2.31.1
+
