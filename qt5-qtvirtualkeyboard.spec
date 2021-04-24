@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-5.15.2
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
-Release:	1
+Release:	2
 %endif
 Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 # From KDE
@@ -44,7 +44,7 @@ Summary: The Qt Virtual Keyboard library
 Group: System/Libraries
 
 %description -n %{lib}
-The Qt Virtual Keyboard library
+The Qt Virtual Keyboard library.
 
 %package -n %{devel}
 Summary: Development files for the Qt Virtual Keyboard library
@@ -52,14 +52,14 @@ Group: Development/KDE and Qt
 Requires: %{lib} = %{EVRD}
 
 %description -n %{devel}
-Development files for the Qt Virtual Keyboard library
+Development files for the Qt Virtual Keyboard library.
 
 %package -n %{hunspelllib}
 Summary: The Qt Hunspell input method library
 Group: System/Libraries
 
 %description -n %{hunspelllib}
-The Qt Hunspell input method library
+The Qt Hunspell input method library.
 
 %package -n %{hunspelldevel}
 Summary: Development files for the Qt Hunspell input method library
@@ -67,7 +67,7 @@ Group: Development/KDE and Qt
 Requires: %{hunspelllib} = %{EVRD}
 
 %description -n %{hunspelldevel}
-Development files for the Qt Hunspell input method library
+Development files for the Qt Hunspell input method library.
 
 %package examples
 Summary: Examples for the Qt Virtual Keyboard
@@ -92,7 +92,7 @@ Examples for the Qt Virtual Keyboard.
 %make_install install_docs INSTALL_ROOT="%{buildroot}"
 
 %files
-%{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
+
 %{_libdir}/qt5/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so
 %{_libdir}/qt5/qml/QtQuick/VirtualKeyboard
 %dir %{_libdir}/qt5/plugins/virtualkeyboard
@@ -109,6 +109,7 @@ Examples for the Qt Virtual Keyboard.
 %{_libdir}/qt5/mkspecs/modules/qt_lib_virtualkeyboard*.pri
 %{_libdir}/cmake/Qt5VirtualKeyboard
 %{_includedir}/qt5/QtVirtualKeyboard
+%{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfig.cmake
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfigVersion.cmake
 %doc %{_docdir}/qt5/qtvirtualkeyboard.qch
