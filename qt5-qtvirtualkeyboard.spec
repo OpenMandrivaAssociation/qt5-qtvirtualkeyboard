@@ -15,7 +15,7 @@ Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-5.15.2
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
-Release:	1
+Release:	2
 %endif
 Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 # From KDE
@@ -92,7 +92,7 @@ Examples for the Qt Virtual Keyboard.
 %make_install install_docs INSTALL_ROOT="%{buildroot}"
 
 %files
-%{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
+
 %{_libdir}/qt5/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so
 %{_libdir}/qt5/qml/QtQuick/VirtualKeyboard
 %dir %{_libdir}/qt5/plugins/virtualkeyboard
@@ -109,6 +109,7 @@ Examples for the Qt Virtual Keyboard.
 %{_libdir}/qt5/mkspecs/modules/qt_lib_virtualkeyboard*.pri
 %{_libdir}/cmake/Qt5VirtualKeyboard
 %{_includedir}/qt5/QtVirtualKeyboard
+%{_libdir}/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfig.cmake
 %{_libdir}/cmake/Qt5HunspellInputMethod/Qt5HunspellInputMethodConfigVersion.cmake
 %doc %{_docdir}/qt5/qtvirtualkeyboard.qch
