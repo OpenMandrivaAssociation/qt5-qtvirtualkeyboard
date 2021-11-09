@@ -1,12 +1,13 @@
 %define major 5
-%define lib %mklibname Qt5VirtualKeyboard %{major}
-%define devel %mklibname -d Qt5VirtualKeyboard
+%define libname %mklibname Qt5VirtualKeyboard %{major}
+%define develname %mklibname -d Qt5VirtualKeyboard
 %define hunspelllib %mklibname Qt5HunspellInputMethod %{major}
 %define hunspelldevel %mklibname -d Qt5HunspellInputMethod
 
 %define beta %{nil}
 
-Name: qt5-qtvirtualkeyboard
+Summary:	Qt Virtual Keyboard
+Name:		qt5-qtvirtualkeyboard
 Version:	5.15.3
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
@@ -15,63 +16,66 @@ Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-src-5.15.2
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
-Release:	2
+Release:	3
 %endif
-Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
-# From KDE
-Patch1000:	0001-Bump-version.patch
-Patch1002:	0003-Suggest-phrases-based-on-the-last-selected-word-of-p.patch
-Summary: Qt Virtual Keyboard
 URL: https://github.com/qtproject/qtvirtualkeyboard
 License: LGPL-2.1-with-Qt-Company-Qt-exception-1.1 or LGPL-3.0-with-Qt-Company-Qt-exception-1.1
 Group: System/Libraries
-BuildRequires: qmake5
-BuildRequires: pkgconfig(Qt5Core)
-BuildRequires: pkgconfig(Qt5Quick)
-BuildRequires: pkgconfig(Qt5Svg)
-BuildRequires: pkgconfig(hunspell)
-BuildRequires: qt5-qtdoc
-BuildRequires: qt5-qttools
-BuildRequires: qdoc5 qt5-doc qt5-assistant
+Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
+# From KDE https://invent.kde.org/qt/qt/qtvirtualkeyboard -b kde/5.15
+Patch1000:	0001-Bump-version.patch
+Patch1002:	0003-Suggest-phrases-based-on-the-last-selected-word-of-p.patch
+Patch1003:	0004-Avoid-reparenting-of-InputPanel-when-the-window-is-b.patch
+
+BuildRequires:	qmake5
+BuildRequires:	pkgconfig(Qt5Core)
+BuildRequires:	pkgconfig(Qt5Quick)
+BuildRequires:	pkgconfig(Qt5Svg)
+BuildRequires:	pkgconfig(hunspell)
+BuildRequires:	qt5-qtdoc
+BuildRequires:	qt5-qttools
+BuildRequires:	qdoc5
+BuildRequires:	qt5-doc
+BuildRequires:	qt5-assistant
 # For the Provides: generator
-BuildRequires: cmake >= 3.11.0-1
+BuildRequires:	cmake >= 3.11.0-1
 
 %description
 Qt text to virtualkeyboard library.
 
-%package -n %{lib}
-Summary: The Qt Virtual Keyboard library
-Group: System/Libraries
+%package -n %{libname}
+Summary:	The Qt Virtual Keyboard library
+Group:		System/Libraries
 
-%description -n %{lib}
+%description -n %{libname}
 The Qt Virtual Keyboard library.
 
-%package -n %{devel}
-Summary: Development files for the Qt Virtual Keyboard library
-Group: Development/KDE and Qt
-Requires: %{lib} = %{EVRD}
+%package -n %{develname}
+Summary:	Development files for the Qt Virtual Keyboard library
+Group:		Development/KDE and Qt
+Requires:	%{libname} = %{EVRD}
 
-%description -n %{devel}
+%description -n %{develname}
 Development files for the Qt Virtual Keyboard library.
 
 %package -n %{hunspelllib}
-Summary: The Qt Hunspell input method library
-Group: System/Libraries
+Summary:	The Qt Hunspell input method library
+Group:		System/Libraries
 
 %description -n %{hunspelllib}
 The Qt Hunspell input method library.
 
 %package -n %{hunspelldevel}
-Summary: Development files for the Qt Hunspell input method library
-Group: Development/KDE and Qt
-Requires: %{hunspelllib} = %{EVRD}
+Summary:	Development files for the Qt Hunspell input method library
+Group:		Development/KDE and Qt
+Requires:	%{hunspelllib} = %{EVRD}
 
 %description -n %{hunspelldevel}
 Development files for the Qt Hunspell input method library.
 
 %package examples
-Summary: Examples for the Qt Virtual Keyboard
-Group: Development/KDE and Qt
+Summary:	Examples for the Qt Virtual Keyboard
+Group:		Development/KDE and Qt
 
 %description examples
 Examples for the Qt Virtual Keyboard.
@@ -92,17 +96,16 @@ Examples for the Qt Virtual Keyboard.
 %make_install install_docs INSTALL_ROOT="%{buildroot}"
 
 %files
-
 %{_libdir}/qt5/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so
 %{_libdir}/qt5/qml/QtQuick/VirtualKeyboard
 %dir %{_libdir}/qt5/plugins/virtualkeyboard
 # FIXME do we want to split language support into subpackages?
 %{_libdir}/qt5/plugins/virtualkeyboard/*.so
 
-%files -n %{lib}
+%files -n %{libname}
 %{_libdir}/libQt5VirtualKeyboard.so.%{major}*
 
-%files -n %{devel}
+%files -n %{develname}
 %{_libdir}/libQt5VirtualKeyboard.so
 %{_libdir}/libQt5VirtualKeyboard.prl
 %{_libdir}/pkgconfig/Qt5VirtualKeyboard.pc
