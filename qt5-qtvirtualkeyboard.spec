@@ -14,19 +14,19 @@ Version:	5.15.3
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
 Release:	0.%{beta}.1
 %else
-%define qttarballdir qtvirtualkeyboard-everywhere-src-5.15.2
-Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/5.15.2/submodules/%{qttarballdir}.tar.xz
-Release:	3
+%define qttarballdir qtvirtualkeyboard-everywhere-opensource-src-%{version}
+Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
+Release:	4
 %endif
 URL: https://github.com/qtproject/qtvirtualkeyboard
 License: LGPL-2.1-with-Qt-Company-Qt-exception-1.1 or LGPL-3.0-with-Qt-Company-Qt-exception-1.1
 Group: System/Libraries
-Patch1:		qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 # From KDE https://invent.kde.org/qt/qt/qtvirtualkeyboard -b kde/5.15
-Patch1000:	0001-Bump-version.patch
-Patch1002:	0003-Suggest-phrases-based-on-the-last-selected-word-of-p.patch
-Patch1003:	0004-Avoid-reparenting-of-InputPanel-when-the-window-is-b.patch
-
+Patch1000:	0001-Avoid-reparenting-of-InputPanel-when-the-window-is-b.patch
+Patch1001:	0002-Fix-high-CPU-utilization-caused-by-key-repeat-timer.patch
+Patch1002:	0003-Fix-processing-of-hard-Qt-Key_Backspace-and-Qt-Key_D.patch
+# OM specific
+Patch2000:	qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 BuildRequires:	qmake5
 BuildRequires:	pkgconfig(Qt5Core)
 BuildRequires:	pkgconfig(Qt5Quick)
@@ -84,7 +84,7 @@ Examples for the Qt Virtual Keyboard.
 %{_libdir}/qt5/examples/virtualkeyboard
 
 %prep
-%autosetup -n %{qttarballdir} -p1
+%autosetup -n %(echo %{qttarballdir}|sed -e 's,-opensource,,') -p1
 %{_libdir}/qt5/bin/syncqt.pl -version %{version}
 %qmake_qt5 *.pro
 
