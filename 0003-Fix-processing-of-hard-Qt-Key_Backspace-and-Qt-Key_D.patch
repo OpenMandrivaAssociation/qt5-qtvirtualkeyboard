@@ -1,4 +1,4 @@
-From e8ae4757dd32e8dbf69a7c57f2bc5c1e238416db Mon Sep 17 00:00:00 2001
+From 766c1b7acbdc9ff4e35f6eb341fd446b1c20b811 Mon Sep 17 00:00:00 2001
 From: Jarkko Koivikko <jarkko.koivikko@code-q.fi>
 Date: Tue, 8 Jun 2021 15:25:09 +0300
 Subject: [PATCH 3/3] Fix processing of hard Qt::Key_Backspace and
@@ -102,5 +102,5 @@ index d814f282..f60acc64 100644
              prepareTest()
  
 -- 
-2.36.1
+2.37.0
 

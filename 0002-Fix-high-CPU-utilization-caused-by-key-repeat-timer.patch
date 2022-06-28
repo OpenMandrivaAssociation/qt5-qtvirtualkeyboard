@@ -1,4 +1,4 @@
-From 1c15d4f231c66d3f39f648942b120159fe7a8be0 Mon Sep 17 00:00:00 2001
+From c4019d18d2c1cc9b9f05df7542a20a7eaa101cc1 Mon Sep 17 00:00:00 2001
 From: Jarkko Koivikko <jarkko.koivikko@code-q.fi>
 Date: Mon, 7 Jun 2021 14:04:27 +0300
 Subject: [PATCH 2/3] Fix high CPU utilization caused by key repeat timer
@@ -42,5 +42,5 @@ index e64ea4eb..5f74c2a7 100644
      }
  }
 -- 
-2.36.1
+2.37.0
 

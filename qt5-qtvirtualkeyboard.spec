@@ -8,7 +8,7 @@
 
 Summary:	Qt Virtual Keyboard
 Name:		qt5-qtvirtualkeyboard
-Version:	5.15.4
+Version:	5.15.5
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
@@ -16,7 +16,7 @@ Release:	0.%{beta}.1
 %else
 %define qttarballdir qtvirtualkeyboard-everywhere-opensource-src-%{version}
 Source0: http://download.qt.io/official_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}/submodules/%{qttarballdir}.tar.xz
-Release:	4
+Release:	1
 %endif
 URL: https://github.com/qtproject/qtvirtualkeyboard
 License: LGPL-2.1-with-Qt-Company-Qt-exception-1.1 or LGPL-3.0-with-Qt-Company-Qt-exception-1.1
