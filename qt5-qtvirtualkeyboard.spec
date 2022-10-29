@@ -8,7 +8,7 @@
 
 Summary:	Qt Virtual Keyboard
 Name:		qt5-qtvirtualkeyboard
-Version:	5.15.6
+Version:	5.15.7
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
@@ -22,7 +22,7 @@ URL: https://github.com/qtproject/qtvirtualkeyboard
 License: LGPL-2.1-with-Qt-Company-Qt-exception-1.1 or LGPL-3.0-with-Qt-Company-Qt-exception-1.1
 Group: System/Libraries
 # From KDE https://invent.kde.org/qt/qt/qtvirtualkeyboard -b kde/5.15
-Patch1000:	0001-Avoid-reparenting-of-InputPanel-when-the-window-is-b.patch
+# [currently none required]
 # OM specific
 Patch2000:	qtvirtualkeyboard-5.15.0-hapticfeedback.patch
 BuildRequires:	qmake5
