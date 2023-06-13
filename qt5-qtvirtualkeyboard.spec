@@ -8,7 +8,7 @@
 
 Summary:	Qt Virtual Keyboard
 Name:		qt5-qtvirtualkeyboard
-Version:	5.15.9
+Version:	5.15.10
 %if "%{beta}" != "%{nil}"
 %define qttarballdir qtvirtualkeyboard-everywhere-src-%{version}-%{beta}
 Source0: http://download.qt.io/development_releases/qt/%(echo %{version}|cut -d. -f1-2)/%{version}-%{beta}/submodules/%{qttarballdir}.tar.xz
